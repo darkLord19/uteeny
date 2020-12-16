@@ -28,3 +28,12 @@ func createIndexIfNotExist(db *sql.DB) error {
 	_, err := db.Exec(query)
 	return err
 }
+
+func store(db *sql.DB, u url) error {
+	query := fmt.Sprintf(`
+		INSERT urls(hash, original, timestamp)
+		VALUES (%s, %s, %s)
+	`, u.hash, u.original, u.timestamp)
+	_, err := db.Exec(query)
+	return err
+}

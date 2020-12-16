@@ -22,8 +22,22 @@ func shorten(e *env) http.HandlerFunc {
 			http.Error(w, "please provide url to shorten", http.StatusBadRequest)
 			return
 		}
-		ts := time.Now().UTC().Unix()
+		ts := time.Now().UTC().Format(time.RFC3339Nano)
 		u := url{original: o[0], timestamp: ts, hash: ""}
+		u.calculateHash()
+		err := store(e.db, u)
+		if err != nil {
+			http.Error(w, "something went wrong", http.StatusInternalServerError)
+			return
+		}
+		w.Header().Set("Content-Type", "application/json")
+		data := u.toJSON()
+		if string(data) == "" {
+			http.Error(w, "something went wrong", http.StatusInternalServerError)
+			return
+		}
+		w.WriteHeader(http.StatusOK)
+		w.Write(data)
 	}
 }
 
