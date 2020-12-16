@@ -20,3 +20,8 @@ func elongate(e *env) http.HandlerFunc {
 
 	}
 }
+
+func routes(m *http.ServeMux, e *env) {
+	m.Handle("/shorten", shorten(e))
+	m.Handle("/elongate", elongate(e))
+}
