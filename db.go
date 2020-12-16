@@ -17,6 +17,7 @@ func createTablesIfNotExist(db *sql.DB) error {
 	query := `CREATE TABLE IF NOT EXISTS urls (
 		hash varchar(8) PRIMARY KEY
 		original varchar(1024) NOT NULL
+		timestamp bigint
 	)`
 	_, err := db.Exec(query)
 	return err
