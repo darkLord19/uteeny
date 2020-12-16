@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"net/http"
 	"os"
+	"time"
 )
 
 type env struct {
@@ -12,7 +13,17 @@ type env struct {
 
 func shorten(e *env) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		if r.Method != "GET" {
+			http.Error(w, r.Method+" is not allowed on /shorten", http.StatusMethodNotAllowed)
+			return
+		}
+		o, exist := r.URL.Query()["url"]
+		if !exist || len(o) == 0 {
+			http.Error(w, "please provide url to shorten", http.StatusBadRequest)
+			return
+		}
+		ts := time.Now().UTC().Unix()
+		u := url{original: o[0], timestamp: ts, hash: ""}
 	}
 }
 
