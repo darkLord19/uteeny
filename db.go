@@ -22,3 +22,9 @@ func createTablesIfNotExist(db *sql.DB) error {
 	_, err := db.Exec(query)
 	return err
 }
+
+func createIndexIfNotExist(db *sql.DB) error {
+	query := `CREATE INDEX url_hash ON urls(hash)`
+	_, err := db.Exec(query)
+	return err
+}

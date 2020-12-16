@@ -36,6 +36,7 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	createIndexIfNotExist(db)
 	e := env{db: db}
 	mux := http.NewServeMux()
 	routes(mux, &e)
