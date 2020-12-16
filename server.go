@@ -32,6 +32,10 @@ func main() {
 	if err != nil {
 		panic(err)
 	}
+	err = createTablesIfNotExist(db)
+	if err != nil {
+		panic(err)
+	}
 	e := env{db: db}
 	mux := http.NewServeMux()
 	routes(mux, &e)
