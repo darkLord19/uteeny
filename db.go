@@ -44,7 +44,7 @@ func hashLookup(db *sql.DB, p string) (*url, error) {
 		FROM
 			urls
 		WHERE
-			hash = %s
+			hash = '%s'
 	`, p)
 	row := db.QueryRow(query)
 	if err := row.Err(); err != nil {

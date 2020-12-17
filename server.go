@@ -49,7 +49,7 @@ func elongate(e *env) http.HandlerFunc {
 			http.Error(w, "something went wrong", http.StatusInternalServerError)
 			return
 		}
-		http.Redirect(w, r, u.original, http.StatusSeeOther)
+		http.Redirect(w, r, "http://"+u.original, http.StatusSeeOther)
 	}
 }
 
