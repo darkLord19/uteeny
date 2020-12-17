@@ -17,7 +17,6 @@ func createTablesIfNotExist(db *sql.DB) error {
 	query := `CREATE TABLE IF NOT EXISTS urls (
 		hash varchar(8) PRIMARY KEY
 		original varchar(1024) NOT NULL
-		timestamp bigint
 	)`
 	_, err := db.Exec(query)
 	return err
@@ -31,9 +30,9 @@ func createIndexIfNotExist(db *sql.DB) error {
 
 func store(db *sql.DB, u url) error {
 	query := fmt.Sprintf(`
-		INSERT urls(hash, original, timestamp)
-		VALUES (%s, %s, %s)
-	`, u.hash, u.original, u.timestamp)
+		INSERT urls(hash, original)
+		VALUES (%s, %s)
+	`, u.hash, u.original)
 	_, err := db.Exec(query)
 	return err
 }

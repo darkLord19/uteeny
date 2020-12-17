@@ -4,7 +4,6 @@ import (
 	"database/sql"
 	"net/http"
 	"os"
-	"time"
 )
 
 type env struct {
@@ -22,8 +21,7 @@ func shorten(e *env) http.HandlerFunc {
 			http.Error(w, "please provide url to shorten", http.StatusBadRequest)
 			return
 		}
-		ts := time.Now().UTC().Format(time.RFC3339Nano)
-		u := url{original: o[0], timestamp: ts, hash: ""}
+		u := url{original: o[0], hash: ""}
 		u.calculateHash()
 		err := store(e.db, u)
 		if err != nil {
