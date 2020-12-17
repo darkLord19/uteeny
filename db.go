@@ -15,7 +15,7 @@ func connect(uname, password, dburl, dbport, dbname string) (*sql.DB, error) {
 
 func createTablesIfNotExist(db *sql.DB) error {
 	query := `CREATE TABLE IF NOT EXISTS urls (
-		hash varchar(8) PRIMARY KEY
+		hash varchar(8) PRIMARY KEY,
 		original varchar(1024) NOT NULL
 	)`
 	_, err := db.Exec(query)
@@ -30,8 +30,8 @@ func createIndexIfNotExist(db *sql.DB) error {
 
 func store(db *sql.DB, u url) error {
 	query := fmt.Sprintf(`
-		INSERT urls(hash, original)
-		VALUES (%s, %s)
+		INSERT INTO urls (hash, original)
+		VALUES('%s', '%s')
 	`, u.hash, u.original)
 	_, err := db.Exec(query)
 	return err
