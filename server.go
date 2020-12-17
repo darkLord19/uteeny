@@ -2,12 +2,14 @@ package main
 
 import (
 	"database/sql"
+	"fmt"
 	"net/http"
 	"os"
 )
 
 type env struct {
-	db *sql.DB
+	db     *sql.DB
+	domain string
 }
 
 func shorten(e *env) http.HandlerFunc {
@@ -29,13 +31,9 @@ func shorten(e *env) http.HandlerFunc {
 			return
 		}
 		w.Header().Set("Content-Type", "application/json")
-		data := u.toJSON()
-		if string(data) == "" {
-			http.Error(w, "something went wrong", http.StatusInternalServerError)
-			return
-		}
+		data := fmt.Sprintf("{\"short\":\"%s/%s\"}", e.domain, u.hash)
 		w.WriteHeader(http.StatusOK)
-		w.Write(data)
+		w.Write([]byte(data))
 	}
 }
 
@@ -70,7 +68,7 @@ func main() {
 		panic(err)
 	}
 	createIndexIfNotExist(db)
-	e := env{db: db}
+	e := env{db: db, domain: os.Getenv("DOMAIN")}
 	mux := http.NewServeMux()
 	routes(mux, &e)
 	http.ListenAndServe(":9090", mux)
