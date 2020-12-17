@@ -71,5 +71,5 @@ func main() {
 	e := env{db: db, domain: os.Getenv("DOMAIN")}
 	mux := http.NewServeMux()
 	routes(mux, &e)
-	http.ListenAndServe(":9090", mux)
+	http.ListenAndServe(os.Getenv("PORT"), mux)
 }
