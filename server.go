@@ -43,13 +43,23 @@ func shorten(e *env) http.HandlerFunc {
 
 func elongate(e *env) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-
+		path := r.URL.Path
+		if path == "/" {
+			http.Error(w, "bad request", http.StatusBadRequest)
+			return
+		}
+		u, err := hashLookup(e.db, path[1:])
+		if err != nil {
+			http.Error(w, "something went wrong", http.StatusInternalServerError)
+			return
+		}
+		http.Redirect(w, r, u.original, http.StatusSeeOther)
 	}
 }
 
 func routes(m *http.ServeMux, e *env) {
 	m.Handle("/shorten", shorten(e))
-	m.Handle("/elongate", elongate(e))
+	m.Handle("/", elongate(e))
 }
 
 func main() {

@@ -37,3 +37,22 @@ func store(db *sql.DB, u url) error {
 	_, err := db.Exec(query)
 	return err
 }
+
+func hashLookup(db *sql.DB, p string) (*url, error) {
+	query := fmt.Sprintf(`
+		SELECT
+			original
+		FROM
+			urls
+		WHERE
+			hash = %s
+	`, p)
+	row := db.QueryRow(query)
+	if err := row.Err(); err != nil {
+		return nil, err
+	}
+	var u url
+	u.hash = p
+	err := row.Scan(&u.original)
+	return &u, err
+}
